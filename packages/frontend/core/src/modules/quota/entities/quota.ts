@@ -34,8 +34,17 @@ type QuotaType = {
 const logger = new DebugLogger('affine:workspace-permission');
 const DAY_SECONDS = 24 * 60 * 60;
 
+/** Sentinel matching the server-side `selfhost_free` unlimited member quota. */
+const UNLIMITED_MEMBER_LIMIT = 2 ** 31 - 1;
+
 function formatSize(size: number) {
   return size === 0 ? '0 B' : (bytes.format(size) ?? '0 B');
+}
+
+function memberLimitLabel(memberLimit: number | undefined) {
+  return memberLimit !== undefined && memberLimit >= UNLIMITED_MEMBER_LIMIT
+    ? 'Unlimited'
+    : String(memberLimit ?? 0);
 }
 
 function formatHistoryPeriod(value: number) {
@@ -77,7 +86,7 @@ function workspaceQuotaFromState(
       blobLimit: formatSize(state.blobLimit),
       storageQuota: formatSize(state.storageQuota),
       historyPeriod: formatHistoryPeriod(state.historyPeriodSeconds),
-      memberLimit: state.seatLimit.toString(),
+      memberLimit: memberLimitLabel(state.seatLimit),
       memberCount: state.memberCount.toString(),
       overcapacityMemberCount: state.overcapacityMemberCount.toString(),
     },

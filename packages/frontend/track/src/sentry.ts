@@ -11,6 +11,10 @@ function createSentry() {
   let client: Sentry.BrowserClient | undefined;
   const wrapped = {
     init() {
+      if (!BUILD_CONFIG.SENTRY_DSN) {
+        // Sentry is disabled when no DSN is configured (fully offline build).
+        return;
+      }
       if (!globalThis.SENTRY_RELEASE) {
         // https://docs.sentry.io/platforms/javascript/guides/react/#configure
         client = Sentry.init({

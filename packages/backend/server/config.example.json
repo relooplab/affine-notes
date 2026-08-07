@@ -1,3 +1,85 @@
 {
-  "$schema": "../../../.docker/selfhost/schema.json"
+  "$schema": "../../../.docker/selfhost/schema.json",
+  "telemetry": {
+    "ga4": {
+      "measurementId": "",
+      "apiSecret": ""
+    }
+  },
+  "copilot": {
+    "enabled": false,
+    "byok": {
+      "enabled": false
+    },
+    "unsplash": {
+      "key": ""
+    },
+    "exa": {
+      "key": ""
+    }
+  },
+  "payment": {
+    "enabled": false
+  },
+  "captcha": {
+    "enabled": false
+  },
+  "oauth": {
+    "providers": {
+      "google": {
+        "clientId": "",
+        "clientSecret": ""
+      },
+      "github": {
+        "clientId": "",
+        "clientSecret": ""
+      },
+      "apple": {
+        "clientId": "",
+        "clientSecret": ""
+      },
+      "oidc": {
+        "clientId": "",
+        "clientSecret": "",
+        "issuer": "",
+        "allowPrivateNetwork": false
+      }
+    }
+  },
+  "calendar": {
+    "google": {
+      "enabled": false,
+      "clientId": "",
+      "clientSecret": ""
+    },
+    "caldav": {
+      "enabled": false,
+      "providers": []
+    }
+  },
+  "indexer": {
+    "enabled": false
+  },
+  "storages": {
+    "avatar": {
+      "storage": {
+        "provider": "fs",
+        "bucket": "avatars",
+        "config": {
+          "path": "/data/affine/storage"
+        }
+      },
+      "publicPath": "/api/avatars/"
+    },
+    "blob": {
+      "storage": {
+        "provider": "fs",
+        "bucket": "blobs",
+        "config": {
+          "path": "/data/affine/storage"
+        }
+      }
+    }
+  }
 }
+

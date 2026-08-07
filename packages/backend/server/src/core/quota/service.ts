@@ -14,6 +14,20 @@ import {
 } from './types';
 import { formatDate, formatSize } from './utils';
 
+/**
+ * Sentinel used to represent an effectively unlimited member quota.
+ * Matches the native `selfhost_free` plan (`i32::MAX`). Any value at or above
+ * this threshold is surfaced to users as "Unlimited".
+ */
+const UNLIMITED_MEMBER_LIMIT = 2 ** 31 - 1;
+
+const formatMemberLimit = (
+  limit: number | null | undefined
+): string =>
+  limit != null && limit >= UNLIMITED_MEMBER_LIMIT
+    ? 'Unlimited'
+    : String(limit ?? 0);
+
 type UserQuotaWithUsage = Omit<UserQuotaType, 'humanReadable'>;
 type WorkspaceQuota = Omit<BaseWorkspaceQuota, 'seatQuota'> & {
   ownerQuota?: string;
@@ -88,7 +102,7 @@ export class QuotaService {
       storageQuota: formatSize(quota.storageQuota),
       usedStorageQuota: formatSize(quota.usedStorageQuota),
       historyPeriod: formatDate(quota.historyPeriod),
-      memberLimit: quota.memberLimit.toString(),
+      memberLimit: formatMemberLimit(quota.memberLimit),
       copilotActionLimit: quota.copilotActionLimit
         ? `${quota.copilotActionLimit} times`
         : 'Unlimited',
@@ -128,7 +142,7 @@ export class QuotaService {
       storageQuota: formatSize(quota.storageQuota),
       storageQuotaUsed: formatSize(quota.usedStorageQuota),
       historyPeriod: formatDate(quota.historyPeriod),
-      memberLimit: quota.memberLimit.toString(),
+      memberLimit: formatMemberLimit(quota.memberLimit),
       memberCount: quota.memberCount.toString(),
       overcapacityMemberCount: quota.overcapacityMemberCount.toString(),
     };
@@ -218,9 +232,10 @@ export class QuotaService {
   }
 
   private userMemberLimit(plan: string) {
-    return plan === 'pro' || plan === 'lifetime_pro' || plan === 'selfhost_free'
-      ? 10
-      : 3;
+    if (plan === 'selfhost_free' || plan === 'selfhost_team') {
+      return UNLIMITED_MEMBER_LIMIT;
+    }
+    return plan === 'pro' || plan === 'lifetime_pro' ? 10 : 3;
   }
 
   private planName(plan: string) {

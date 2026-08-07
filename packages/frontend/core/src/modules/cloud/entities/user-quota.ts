@@ -27,6 +27,9 @@ type QuotaType = {
 
 const DAY_SECONDS = 24 * 60 * 60;
 
+/** Sentinel matching the server-side `selfhost_free` unlimited member quota. */
+const UNLIMITED_MEMBER_LIMIT = 2 ** 31 - 1;
+
 function formatSize(size: number) {
   return size === 0 ? '0 B' : (bytes.format(size) ?? '0 B');
 }
@@ -35,10 +38,17 @@ function formatHistoryPeriod(value: number) {
   return `${(value / DAY_SECONDS).toFixed(0)} days`;
 }
 
+function memberLimitLabel(memberLimit: number) {
+  return memberLimit >= UNLIMITED_MEMBER_LIMIT
+    ? 'Unlimited'
+    : memberLimit.toString();
+}
+
 function userMemberLimit(plan: string) {
-  return plan === 'pro' || plan === 'lifetime_pro' || plan === 'selfhost_free'
-    ? 10
-    : 3;
+  if (plan === 'selfhost_free') {
+    return UNLIMITED_MEMBER_LIMIT;
+  }
+  return plan === 'pro' || plan === 'lifetime_pro' ? 10 : 3;
 }
 
 function planName(plan: string) {
@@ -69,7 +79,7 @@ function userQuotaFromState(state: UserQuotaStateSnapshot): QuotaType {
       blobLimit: formatSize(state.blobLimit),
       storageQuota: formatSize(state.storageQuota),
       historyPeriod: formatHistoryPeriod(state.historyPeriodSeconds),
-      memberLimit: memberLimit.toString(),
+      memberLimit: memberLimitLabel(memberLimit),
     },
   };
 }
