@@ -33,6 +33,7 @@ import {
   CollapsibleSection,
   NavigationPanelCollections,
   NavigationPanelFavorites,
+  NavigationPanelFiles,
   NavigationPanelMigrationFavorites,
   NavigationPanelOrganize,
   NavigationPanelTags,
@@ -228,6 +229,7 @@ export const RootAppSidebar = memo((): ReactElement => {
       <SidebarScrollableContainer>
         <NavigationPanelFavorites />
         <NavigationPanelOrganize />
+        <NavigationPanelFiles />
         <NavigationPanelMigrationFavorites />
         <NavigationPanelTags />
         <NavigationPanelCollections />

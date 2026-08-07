@@ -30,6 +30,7 @@ import { WebSocketModule } from './base/websocket';
 import { AuthModule } from './core/auth';
 import { BackendRuntimeModule } from './core/backend-runtime';
 import { CommentModule } from './core/comment';
+import { WorkspaceFilesModule } from './core/workspace-files';
 import { ServerConfigModule, ServerConfigResolverModule } from './core/config';
 import { DocStorageModule } from './core/doc';
 import { DocRendererModule } from './core/doc-renderer';
@@ -208,6 +209,7 @@ export function buildAppModule(env: Env) {
       CalendarModule,
       TelemetryModule,
       CommentModule,
+      WorkspaceFilesModule,
       QueueDashboardModule
     )
     // doc service and front service

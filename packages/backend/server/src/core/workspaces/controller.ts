@@ -5,6 +5,7 @@ import {
   Get,
   Head,
   Logger,
+  NotFoundException,
   Param,
   Query,
   Req,
@@ -30,7 +31,11 @@ import { CurrentUser, Public } from '../auth';
 import { PgWorkspaceDocStorageAdapter } from '../doc';
 import { DocReader } from '../doc/reader';
 import { PermissionAccess } from '../permission';
-import { CommentAttachmentStorage, WorkspaceBlobStorage } from '../storage';
+import {
+  CommentAttachmentStorage,
+  WorkspaceBlobStorage,
+  WorkspaceFileStorage,
+} from '../storage';
 import { DocID } from '../utils/doc';
 
 @Controller('/api/workspaces')
@@ -39,6 +44,7 @@ export class WorkspacesController {
   constructor(
     private readonly storage: WorkspaceBlobStorage,
     private readonly commentAttachmentStorage: CommentAttachmentStorage,
+    private readonly workspaceFileStorage: WorkspaceFileStorage,
     private readonly ac: PermissionAccess,
     private readonly workspace: PgWorkspaceDocStorageAdapter,
     private readonly docReader: DocReader,
@@ -406,6 +412,52 @@ export class WorkspacesController {
     applyAttachHeaders(res, {
       contentType: metadata?.contentType,
       filename: key,
+    });
+
+    res.setHeader('cache-control', 'private, max-age=2592000, immutable');
+    body.pipe(res);
+  }
+
+  @Get('/:id/files/:fileId')
+  @CallMetric('controllers', 'workspace_get_file')
+  async workspaceFile(
+    @CurrentUser() user: CurrentUser,
+    @Param('id') workspaceId: string,
+    @Param('fileId') fileId: string,
+    @Res() res: Response
+  ) {
+    await this.ac
+      .user(user.id)
+      .workspace(workspaceId)
+      .assert('Workspace.Blobs.Read');
+
+    const file = await this.models.workspaceFile.get(fileId);
+    if (!file || file.workspaceId !== workspaceId) {
+      throw new NotFoundException('Workspace file not found');
+    }
+
+    const { body, metadata, redirectUrl } =
+      await this.workspaceFileStorage.get(workspaceId, fileId, true);
+
+    if (redirectUrl) {
+      return res.redirect(redirectUrl);
+    }
+
+    if (!body) {
+      throw new NotFoundException('Workspace file not found');
+    }
+
+    // metadata should always exists if body is not null
+    if (metadata) {
+      res.setHeader('content-type', metadata.contentType);
+      res.setHeader('last-modified', metadata.lastModified.toUTCString());
+      res.setHeader('content-length', metadata.contentLength);
+    } else {
+      this.logger.warn(`Workspace file ${workspaceId}/${fileId} has no metadata`);
+    }
+    applyAttachHeaders(res, {
+      contentType: metadata?.contentType,
+      filename: file.name,
     });
 
     res.setHeader('cache-control', 'private, max-age=2592000, immutable');

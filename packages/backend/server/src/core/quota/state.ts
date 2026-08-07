@@ -341,7 +341,7 @@ export class QuotaStateService {
   }
 
   private async getWorkspaceStorageUsage(workspaceId: string) {
-    const [blobSum, commentAttachmentSum] = await Promise.all([
+    const [blobSum, commentAttachmentSum, workspaceFileSum] = await Promise.all([
       this.db.blob.aggregate({
         where: {
           workspaceId,
@@ -359,11 +359,21 @@ export class QuotaStateService {
           size: true,
         },
       }),
+      this.db.workspaceFile.aggregate({
+        where: {
+          workspaceId,
+          deletedAt: null,
+        },
+        _sum: {
+          size: true,
+        },
+      }),
     ]);
 
     return (
       BigInt(blobSum._sum.size ?? 0) +
-      BigInt(commentAttachmentSum._sum.size ?? 0)
+      BigInt(commentAttachmentSum._sum.size ?? 0) +
+      BigInt(workspaceFileSum._sum.size ?? 0)
     );
   }
 

@@ -1,0 +1,17 @@
+mutation uploadWorkspaceFiles(
+  $workspaceId: String!
+  $files: [Upload!]!
+  $parentId: String
+) {
+  uploadWorkspaceFiles(workspaceId: $workspaceId, files: $files, parentId: $parentId) {
+    id
+    name
+    mime
+    size
+    url
+    parentId
+    isFolder
+    createdAt
+    createdBy
+  }
+}

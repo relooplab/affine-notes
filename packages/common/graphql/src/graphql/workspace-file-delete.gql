@@ -1,0 +1,3 @@
+mutation deleteWorkspaceFile($id: String!) {
+  deleteWorkspaceFile(id: $id)
+}

@@ -10,6 +10,7 @@ import {
   AvatarStorage,
   CommentAttachmentStorage,
   WorkspaceBlobStorage,
+  WorkspaceFileStorage,
 } from './wrappers';
 
 @Module({
@@ -19,6 +20,7 @@ import {
     WorkspaceBlobStorage,
     AvatarStorage,
     CommentAttachmentStorage,
+    WorkspaceFileStorage,
     StorageBlobJob,
     BlobUploadCleanupJob,
   ],
@@ -26,10 +28,16 @@ import {
     WorkspaceBlobStorage,
     AvatarStorage,
     CommentAttachmentStorage,
+    WorkspaceFileStorage,
     StorageBlobJob,
   ],
 })
 export class StorageModule {}
 
 export { StorageBlobJob } from './blob-job';
-export { AvatarStorage, CommentAttachmentStorage, WorkspaceBlobStorage };
+export {
+  AvatarStorage,
+  CommentAttachmentStorage,
+  WorkspaceBlobStorage,
+  WorkspaceFileStorage,
+};

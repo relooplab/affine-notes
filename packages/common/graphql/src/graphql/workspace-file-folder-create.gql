@@ -1,0 +1,17 @@
+mutation createWorkspaceFolder(
+  $workspaceId: String!
+  $name: String!
+  $parentId: String
+) {
+  createWorkspaceFolder(workspaceId: $workspaceId, name: $name, parentId: $parentId) {
+    id
+    name
+    mime
+    size
+    url
+    parentId
+    isFolder
+    createdAt
+    createdBy
+  }
+}

@@ -1,0 +1,13 @@
+mutation renameWorkspaceFile($id: String!, $name: String!) {
+  renameWorkspaceFile(id: $id, name: $name) {
+    id
+    name
+    mime
+    size
+    url
+    parentId
+    isFolder
+    createdAt
+    createdBy
+  }
+}

@@ -1813,6 +1813,21 @@ type Mutation {
 
   """Upload a comment attachment and return the access url"""
   uploadCommentAttachment(attachment: Upload!, docId: String!, workspaceId: String!): String!
+
+  """Upload files into the workspace working folder"""
+  uploadWorkspaceFiles(files: [Upload!]!, parentId: String, workspaceId: String!): [WorkspaceFileType!]!
+
+  """Create a folder in the workspace working folder"""
+  createWorkspaceFolder(name: String!, parentId: String, workspaceId: String!): WorkspaceFileType!
+
+  """Move a file/folder into another folder (null parentId = workspace root)"""
+  moveWorkspaceFile(id: String!, parentId: String): WorkspaceFileType!
+
+  """Delete a workspace file"""
+  deleteWorkspaceFile(id: String!): Boolean!
+
+  """Rename a workspace file"""
+  renameWorkspaceFile(id: String!, name: String!): WorkspaceFileType!
   verifyEmail(token: String!): Boolean!
 }
 
@@ -2092,6 +2107,12 @@ type Query {
 
   """Get workspace role permissions"""
   workspaceRolePermissions(id: String!): WorkspaceRolePermissions! @deprecated(reason: "use WorkspaceType[permissions] instead")
+
+  """List files in a workspace's working folder (parentId null = root)"""
+  workspaceFiles(parentId: String, workspaceId: String!): [WorkspaceFileType!]!
+
+  """Get a single workspace file"""
+  workspaceFile(id: String!): WorkspaceFileType
 
   """Get all accessible workspaces for current user"""
   workspaces: [WorkspaceType!]!
@@ -3093,6 +3114,18 @@ type WorkspaceType {
 
   """if workspace is team workspace"""
   team: Boolean!
+}
+
+type WorkspaceFileType {
+  createdAt: DateTime!
+  createdBy: String!
+  id: String!
+  isFolder: Boolean!
+  mime: String!
+  name: String!
+  parentId: String
+  size: SafeInt!
+  url: String!
 }
 
 type WorkspaceUserType {

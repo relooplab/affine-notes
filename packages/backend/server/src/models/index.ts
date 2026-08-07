@@ -49,6 +49,7 @@ import { VerificationTokenModel } from './verification-token';
 import { WorkspaceModel } from './workspace';
 import { WorkspaceAnalyticsModel } from './workspace-analytics';
 import { WorkspaceCalendarModel } from './workspace-calendar';
+import { WorkspaceFileModel } from './workspace-file';
 import { WorkspaceUserModel } from './workspace-user';
 
 const MODELS = {
@@ -84,6 +85,7 @@ const MODELS = {
   appConfig: AppConfigModel,
   comment: CommentModel,
   commentAttachment: CommentAttachmentModel,
+  workspaceFile: WorkspaceFileModel,
   blob: BlobModel,
   mcpCredential: McpCredentialModel,
   calendarAccount: CalendarAccountModel,
@@ -176,5 +178,6 @@ export * from './verification-token';
 export * from './workspace';
 export * from './workspace-analytics';
 export * from './workspace-calendar';
+export * from './workspace-file';
 export * from './workspace-user';
 export type { WorkspaceUserCompat } from './workspace-user-compat';

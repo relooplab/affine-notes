@@ -1,0 +1,13 @@
+mutation moveWorkspaceFile($id: String!, $parentId: String) {
+  moveWorkspaceFile(id: $id, parentId: $parentId) {
+    id
+    name
+    mime
+    size
+    url
+    parentId
+    isFolder
+    createdAt
+    createdBy
+  }
+}

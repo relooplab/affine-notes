@@ -46,6 +46,7 @@ import { configureNavigationPanelModule } from './navigation-panel';
 import { configureNotificationModule } from './notification';
 import { configureOpenInApp } from './open-in-app';
 import { configureOrganizeModule } from './organize';
+import { configureWorkspaceFilesModule } from './workspace-files';
 import { configurePaywallModule } from './paywall';
 import { configurePDFModule } from './pdf';
 import { configurePeekViewModule } from './peek-view';
@@ -97,6 +98,7 @@ export function configureCommonModules(framework: Framework) {
   configureDocsSearchModule(framework);
   configureDocLinksModule(framework);
   configureOrganizeModule(framework);
+  configureWorkspaceFilesModule(framework);
   configureFavoriteModule(framework);
   configureNavigationPanelModule(framework);
   configureThemeEditorModule(framework);

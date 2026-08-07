@@ -1,0 +1,13 @@
+query listWorkspaceFiles($workspaceId: String!, $parentId: String) {
+  workspaceFiles(workspaceId: $workspaceId, parentId: $parentId) {
+    id
+    name
+    mime
+    size
+    url
+    parentId
+    isFolder
+    createdAt
+    createdBy
+  }
+}
